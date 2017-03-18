@@ -400,34 +400,14 @@ def __parse_midi(data_fn):
     # Get melody part, compress into single voice.
     melody_stream = midi_data[5]     # For Metheny piece, Melody is Part #5.
     melody1, melody2 = melody_stream.getElementsByClass(stream.Voice)
-    if False:
-        type(midi_data)#Score
-        type(melody_stream)#Part
-        type(melody1)
-        stream.Voice.mro()
-        len([x for x in melody1.getElementsByClass(stream.Measure)]) #zero
-        len([x for x in melody1.getElementsByClass(note.Note)]) #828
-        environment.set('musicxmlPath' , r"C:\Program Files (x86)\Finale NotePad 2012\Finale NotePad.exe")
-        melody1.show()#somehow it does not work
-        melody1.show('midi')
-        [print(type(x)) for x in midi_data.getElementsByClass(stream.Stream)]# this midi_data consists of a lot of "Part"s
-
-        [[print(type(y)) for y in x.getElementsByClass(stream.Stream)] for x in midi_data.getElementsByClass(stream.Stream)]
-        #Each "Part" consists of plural "Voice"s
-
 
     for j in melody2:
         melody1.insert(j.offset, j)
     melody_voice = melody1 #merging two voices into one voice(?)
-    if False:
-        [x.offset for x in melody2]
 
     for i in melody_voice:
         if i.quarterLength == 0.0:
             i.quarterLength = 0.25
-
-    if False:
-        [i.quarterLength for i in melody_voice]
 
 
 
@@ -452,25 +432,12 @@ def __parse_midi(data_fn):
     comp_stream.append([j.flat for i, j in enumerate(midi_data)
         if i in partIndices])
 
-    if False:
-        tmp = [j.flat for i, j in enumerate(midi_data) if i in partIndices]
-        len(tmp)
-        [i for i in tmp[1]]
-        [print(x) for x in comp_stream.getElementsByClass(stream.Stream)]#Flattened parts are included to a voice
-        y = comp_stream[1]
-        type(y)#flattened "Part" is still a "Part"
-
-
-
     # Full stream containing both the melody and the accompaniment.
     # All parts are flattened.
     full_stream = stream.Voice()
-    if True:
-        for i in xrange(len(comp_stream)):
-            full_stream.append(comp_stream[i])
-    else:
-        for x in comp_stream:
-            full_stream.append(x)
+
+    for i in xrange(len(comp_stream)):
+        full_stream.append(comp_stream[i])
 
     full_stream.append(melody_voice)
 
@@ -496,12 +463,7 @@ def __parse_midi(data_fn):
     melody_stream = solo_stream[-1]
     measures = OrderedDict()
     offsetTuples = [(int(n.offset / 4), n) for n in melody_stream]
-    if False:
-        [print(n) for n in melody_stream]
-        [print(type(n)) for n in melody_stream]
-        type(offsetTuples)
-        len(offsetTuples)
-        [x[0] for x in offsetTuples]
+
     measureNum = 0 # for now, don't use real m. nums (119, 120)
     for key_x, group in groupby(offsetTuples, lambda x: x[0]):
         measures[measureNum] = [n[1] for n in group]
@@ -523,18 +485,6 @@ def __parse_midi(data_fn):
     for key_x, group in groupby(offsetTuples_chords, lambda x: x[0]):
         chords[measureNum] = [n[1] for n in group]
         measureNum += 1
-
-    if False:
-        tmp = groupby(offsetTuples_chords, lambda x: x[0])
-        type(tmp)
-        len(chords)
-        len(measures)
-        type(chords[1])
-
-        type(chords[1][0])
-        chords[1][0].show()
-
-
 
     # Fix for the below problem.
     #   1) Find out why len(measures) != len(chords).
@@ -566,17 +516,7 @@ def __get_abstract_grammars(measures, chords):
 
 #----------------------------PUBLIC FUNCTIONS----------------------------------#
 
-''' Get musical data from a MIDI file '''
-# def get_musical_data(data_fn):
-#     measures, chords = __parse_midi(data_fn)
-#     abstract_grammars = __get_abstract_grammars(measures, chords)
-#     if False:
-#         type(abstract_grammars)
-#         type(abstract_grammars[0])
-#         [print(x) for x in abstract_grammars]
-#
-#
-#     return chords, abstract_grammars
+
 
 ''' Get corpus data from grammatical data '''
 def get_corpus_data(abstract_grammars):
@@ -811,8 +751,8 @@ def generate(data_fn, out_fn, N_epochs):
     bpm = 130
 
     # get data
-    #chords, abstract_grammars = get_musical_data(data_fn)
 
+    ''' Get musical data from a MIDI file '''
     measures, chords = __parse_midi(data_fn)
     abstract_grammars = __get_abstract_grammars(measures, chords)
 
@@ -920,10 +860,14 @@ if __name__ == '__main__':
     bpm = 130
 
     # get data
-    chords, abstract_grammars = get_musical_data(data_fn)
+#    chords, abstract_grammars = get_musical_data(data_fn)
+    measures, chords = __parse_midi(data_fn)
+    abstract_grammars = __get_abstract_grammars(measures, chords)
+
     #chords is orderedDict
     #>>> chords[1]
     #[<music21.chord.Chord E-4 G4 C4 B-3 G#2>, <music21.chord.Chord B-3 F4 D4 A3>]
+
     #abstract_grammars is a list
     #>>> abstract_grammars[1]
     #'C,0.500 S,0.250,<m2,P-4> C,0.250,<P4,m-2> A,0.250,<P4,m-2> S,0.500,<d1,P-5> C,0.250,<P1,d-5> C,0.250,<m2,P-4> A,0.250,<m2,P-4> C,0.250,<M2,d-4> A,0.250,<d4,M-2> C,0.250,<P4,m-2> C,0.250,<P4,m-2>'
