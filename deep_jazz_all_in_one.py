@@ -382,7 +382,7 @@ express permission.
 from music21 import *
 from collections import defaultdict, OrderedDict
 from itertools import groupby, izip_longest
-from grammar import *
+#from grammar import *
 from music21 import *
 environment.set('musicxmlPath' , r"C:\Program Files (x86)\Finale NotePad 2012\Finale NotePad.exe")
 
