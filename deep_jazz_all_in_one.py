@@ -567,16 +567,16 @@ def __get_abstract_grammars(measures, chords):
 #----------------------------PUBLIC FUNCTIONS----------------------------------#
 
 ''' Get musical data from a MIDI file '''
-def get_musical_data(data_fn):
-    measures, chords = __parse_midi(data_fn)
-    abstract_grammars = __get_abstract_grammars(measures, chords)
-    if False:
-        type(abstract_grammars)
-        type(abstract_grammars[0])
-        [print(x) for x in abstract_grammars]
-
-
-    return chords, abstract_grammars
+# def get_musical_data(data_fn):
+#     measures, chords = __parse_midi(data_fn)
+#     abstract_grammars = __get_abstract_grammars(measures, chords)
+#     if False:
+#         type(abstract_grammars)
+#         type(abstract_grammars[0])
+#         [print(x) for x in abstract_grammars]
+#
+#
+#     return chords, abstract_grammars
 
 ''' Get corpus data from grammatical data '''
 def get_corpus_data(abstract_grammars):
@@ -811,7 +811,11 @@ def generate(data_fn, out_fn, N_epochs):
     bpm = 130
 
     # get data
-    chords, abstract_grammars = get_musical_data(data_fn)
+    #chords, abstract_grammars = get_musical_data(data_fn)
+
+    measures, chords = __parse_midi(data_fn)
+    abstract_grammars = __get_abstract_grammars(measures, chords)
+
     #chords is orderedDict
     #>>> chords[1]
     #[<music21.chord.Chord E-4 G4 C4 B-3 G#2>, <music21.chord.Chord B-3 F4 D4 A3>]
