@@ -738,7 +738,8 @@ def generate(data_fn, out_fn, N_epochs):
 
 
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
+if False:
     import sys
     N_epochs = 10#128 # default
     data_fn = 'midi/' + 'original_metheny.mid' # 'And Then I Knew' by Pat Metheny
@@ -757,13 +758,12 @@ if __name__ == '__main__':
 
     # Parse the MIDI data for separate melody and accompaniment parts.
     midi_data = converter.parse(data_fn)
-
     # Get melody part, compress into single voice.
     melody_stream = midi_data[5]     # For Metheny piece, Melody is Part #5.
     melody1, melody2 = melody_stream.getElementsByClass(stream.Voice)
-
     for j in melody2:
         melody1.insert(j.offset, j)
+
     melody_voice = melody1 #merging two voices into one voice(?)
 
     for i in melody_voice:
@@ -777,10 +777,10 @@ if __name__ == '__main__':
     melody_voice.insert(0, instrument.ElectricGuitar())
     #melody_voice.insert(0, key.KeySignature(sharps=1, mode='major'))
     melody_voice.insert(0, key.KeySignature(1))
+
     if False:
-        type(melody_voice)#Voice
-        #We can assign an(?) instrumen such as electric guitar to each "Voice"
-        len(melody_voice)
+        for i in melody_voice:
+            print(i.quarterLength)
 
 
 
@@ -788,10 +788,15 @@ if __name__ == '__main__':
     # the original data. Maybe add more parts, hand-add valid instruments.
     # Should at least add a string part (for sparse solos).
     # Verified are good parts: 0, 1, 6, 7 '''
+
+
+
+    # In the original data, there are 19 parts, among which
+    # Part 5 is used as "melody"
+    # Use
     partIndices = [0, 1, 6, 7]
     comp_stream = stream.Voice()
-    comp_stream.append([j.flat for i, j in enumerate(midi_data)
-        if i in partIndices])
+    comp_stream.append([j.flat for i, j in enumerate(midi_data) if i in partIndices])
 
     # Full stream containing both the melody and the accompaniment.
     # All parts are flattened.
