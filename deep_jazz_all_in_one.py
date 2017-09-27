@@ -11,7 +11,7 @@ Keras documentation on GitHub:
 https://github.com/fchollet/keras/blob/master/examples/lstm_text_generation.py
 
 GPU run command:
-    THEANO_FLAGS=mode=FAST_RUN,device=gpu,floatX=float32 python generator.py [# of epochs]
+    THEANO_FLAGS=mode=FAST_RUN,device=gpu,floatX=float32 python generatoexr.py [# of epochs]
 
     Note: running Keras/Theano on GPU is formally supported for only NVIDIA cards (CUDA backend).
 '''
@@ -24,8 +24,6 @@ import numpy as np
 #from grammar import *
 
 '''
-Author:     Ji-Sung Kim, Evan Chow
-Project:    jazzml / (used in) deepjazz
 Purpose:    Extract, manipulate, process musical grammar
 
 Directly taken then cleaned up from Evan Chow's jazzml,
@@ -148,6 +146,9 @@ def __generate_arbitrary_tone(lastChord):
                              anywhere from minor 6th down to major 2nd down.
                              (interval <a,b> is not ordered). '''
 def parse_melody(fullMeasureNotes, fullMeasureChords):
+    if False:
+        fullMeasureNotes = m
+        fullMeasureChords = c
     # Remove extraneous elements.x
     measure = copy.deepcopy(fullMeasureNotes)
     chords = copy.deepcopy(fullMeasureChords)
@@ -158,7 +159,7 @@ def parse_melody(fullMeasureNotes, fullMeasureChords):
     # 1) measureStartTime: the offset for measure's start, e.g. 476.0.
     # 2) measureStartOffset: how long from the measure start to the first element.
     measureStartTime = measure[0].offset - (measure[0].offset % 4)
-    measureStartOffset  = measure[0].offset - measureStartTime
+    #measureStartOffset  = measure[0].offset - measureStartTime  *** not used ***
 
     # Iterate over the notes and rests in measure, finding the grammar for each
     # note in the measure and adding an abstract grammatical string for it.
@@ -169,6 +170,10 @@ def parse_melody(fullMeasureNotes, fullMeasureChords):
     for ix, nr in enumerate(measure):
         # Get the last chord. If no last chord, then (assuming chords is of length
         # >0) shift first chord in chords to the beginning of the measure.
+        if False:
+            ix = 1
+            nr = measure[1]
+            prevNote = measure[0]
         try:
             lastChord = [n for n in chords if n.offset <= nr.offset][-1]
         except IndexError:
@@ -375,8 +380,6 @@ def unparse_grammar(m1_grammar, m1_chords):
 #from preprocess import *
 
 '''
-Author:     Ji-Sung Kim
-Project:    deepjazz
 Purpose:    Parse, cleanup and process data.
 
 Code adapted from Evan Chow's jazzml, https://github.com/evancchow/jazzml with
@@ -390,7 +393,7 @@ from collections import defaultdict, OrderedDict
 from itertools import groupby, izip_longest
 #from grammar import *
 from music21 import *
-isUseFinale = True
+isUseFinale = False
 if isUseFinale:
     environment.set('musicxmlPath' , r"C:\Program Files (x86)\Finale NotePad 2012\Finale NotePad.exe")
 else:
@@ -420,8 +423,6 @@ def get_corpus_data(abstract_grammars):
 #from qa import *
 
 '''
-Author:     Ji-Sung Kim, Evan Chow
-Project:    deepjazz
 Purpose:    Provide pruning and cleanup functions.
 
 Code adapted from Evan Chow's jazzml, https://github.com/evancchow/jazzml
@@ -675,10 +676,6 @@ if False:
     #melody_voice.insert(0, key.KeySignature(sharps=1, mode='major'))
     melody_voice.insert(0, key.KeySignature(1))
 
-    if False:
-        for i in melody_voice:
-            print(i.quarterLength)
-
 
 
     # The accompaniment parts. Take only the best subset of parts from
@@ -703,24 +700,6 @@ if False:
         full_stream.append(comp_stream[i])
 
     full_stream.append(melody_voice)
-
-
-    if False:
-        #comp_stream[0].getElementsByOffset(0, 10 , mustFinishInSpan=True).show()
-        #comp_stream[0].show()
-        [x.offset for x in comp_stream[0]]
-        tmp = stream.Voice()
-        for i in xrange(len(comp_stream)):
-            tmp.append(comp_stream[i].getElementsByOffset(0,30 , mustFinishInSpan=True))
-
-        tmp.append(melody_voice.getElementsByOffset(0,30 , mustFinishInSpan=True))
-
-        tmp2 = full_stream.getElementsByOffset(0, 100 , mustFinishInSpan=True)
-        [type(x) for x in tmp]
-        [x.offset for x in tmp[0]]
-
-
-
 
     # Extract solo stream, assuming you know the positions ..ByOffset(i, j).
     # Note that for different instruments (with stream.flat), you NEED to use
@@ -750,9 +729,6 @@ if False:
         measures[measureNum] = [n[1] for n in group]
         measureNum += 1
         print(key_x)
-
-    if False:
-        len(set([int(n.offset/4) for n in melody_stream]))
 
     # Get the stream of chords.
     # offsetTuples_chords: group chords by measure number.
@@ -784,6 +760,8 @@ if False:
 
     abstract_grammars = []
     for ix in xrange(1, len(measures)):
+        if False:
+            ix = 1
         m = stream.Voice()
         for i in measures[ix]:
             m.insert(i.offset, i)
@@ -865,8 +843,10 @@ if False:
     out_stream.insert(0.0, tempo.MetronomeMark(number=bpm))
 
     # Play the final stream through output (see 'play' lambda function above)
-    play = lambda x: midi.realtime.StreamPlayer(x).play()
-    play(out_stream)
+    isPlay = False
+    if isPlay:
+        play = lambda x: midi.realtime.StreamPlayer(x).play()
+        play(out_stream)
 
     # save stream
     mf = midi.translate.streamToMidiFile(out_stream)
