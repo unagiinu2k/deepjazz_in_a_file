@@ -705,7 +705,11 @@ if False:
     # Note that for different instruments (with stream.flat), you NEED to use
     # stream.Part(), not stream.Voice().
     # Accompanied solo is in range [478, 548)
-    solo_stream = stream.Voice()
+    if False:
+        solo_stream = stream.Score()
+    else:
+        solo_stream = stream.Voice()
+
     for part in full_stream:
         curr_part = stream.Part()
         curr_part.append(part.getElementsByClass(instrument.Instrument))
