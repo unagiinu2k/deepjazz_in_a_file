@@ -42,6 +42,11 @@ def __is_scale_tone(chord, note):
 
     # Derive major or minor scales (minor if 'other') based on the quality
     # of the chord.
+    if False:
+        chord = lastChord
+        note = nr
+
+
     scaleType = scale.DorianScale() # i.e. minor pentatonic
     if chord.quality == 'major':
         scaleType = scale.MajorScale()
@@ -60,6 +65,9 @@ def __is_approach_tone(chord, note):
     # Method: see if note is +/- 1 a chord tone.
 
     for chordPitch in chord.pitches:
+        if False:
+            chordPitch = chord.pitches[0]
+
         stepUp = chordPitch.transpose(1)
         stepDown = chordPitch.transpose(-1)
         if (note.name == stepDown.name or
@@ -171,9 +179,9 @@ def parse_melody(fullMeasureNotes, fullMeasureChords):
         # Get the last chord. If no last chord, then (assuming chords is of length
         # >0) shift first chord in chords to the beginning of the measure.
         if False:
-            ix = 1
-            nr = measure[1]
-            prevNote = measure[0]
+            ix = 4
+            nr = measure[ix]
+            prevNote = measure[ix-1]
         try:
             lastChord = [n for n in chords if n.offset <= nr.offset][-1]
         except IndexError:
@@ -204,9 +212,9 @@ def parse_melody(fullMeasureNotes, fullMeasureChords):
         # to simplify things you'll use the direct num, e.g. R,0.125
         if (ix == (len(measure)-1)):
             # formula for a in "a - b": start of measure (e.g. 476) + 4
-            diff = measureStartTime + 4.0 - nr.offset
+            diff = measureStartTime + 4.0 - nr.offset ## not used ???
         else:
-            diff = measure[ix + 1].offset - nr.offset
+            diff = measure[ix + 1].offset - nr.offset ## not used???
 
         # Combine into the note info.
         noteInfo = "%s,%.3f" % (elementType, nr.quarterLength) # back to diff
@@ -767,6 +775,17 @@ if False:
         if False:
             ix = 1
         m = stream.Voice()
+        for i in measures[ix]:
+            m.insert(i.offset, i)
+        c = stream.Voice()
+        for j in chords[ix]:
+            c.insert(j.offset, j)
+        parsed = parse_melody(m, c)
+        abstract_grammars.append(parsed)
+
+        # chords is orderedDict
+        # >>> chords[1]
+        # [<music21.chord.Chord E-4 G4 C4 B-3 G#2>, <music21.chord.Chord B-3 F4 D4 A3>]
         for i in measures[ix]:
             m.insert(i.offset, i)
         c = stream.Voice()
