@@ -772,6 +772,7 @@ if False:
 
     abstract_grammars = []
     for ix in xrange(1, len(measures)):
+        print(ix)
         if False:
             ix = 1
         m = stream.Voice()
@@ -786,13 +787,13 @@ if False:
         # chords is orderedDict
         # >>> chords[1]
         # [<music21.chord.Chord E-4 G4 C4 B-3 G#2>, <music21.chord.Chord B-3 F4 D4 A3>]
-        for i in measures[ix]:
-            m.insert(i.offset, i)
-        c = stream.Voice()
-        for j in chords[ix]:
-            c.insert(j.offset, j)
-        parsed = parse_melody(m, c)
-        abstract_grammars.append(parsed)
+        #for i in measures[ix]:
+        #    m.insert(i.offset, i)
+        #c = stream.Voice()
+        #for j in chords[ix]:
+        #    c.insert(j.offset, j)
+        #parsed = parse_melody(m, c)
+        #abstract_grammars.append(parsed)
 
 
 
