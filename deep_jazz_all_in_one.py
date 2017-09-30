@@ -210,11 +210,11 @@ def parse_melody(fullMeasureNotes, fullMeasureChords):
 
         # SECOND, get the length for each element. e.g. 8th note = R8, but
         # to simplify things you'll use the direct num, e.g. R,0.125
-        if (ix == (len(measure)-1)):
+        #if (ix == (len(measure)-1)):
             # formula for a in "a - b": start of measure (e.g. 476) + 4
-            diff = measureStartTime + 4.0 - nr.offset ## not used ???
-        else:
-            diff = measure[ix + 1].offset - nr.offset ## not used???
+        #    diff = measureStartTime + 4.0 - nr.offset ## not used ???
+        #else:
+        #    diff = measure[ix + 1].offset - nr.offset ## not used???
 
         # Combine into the note info.
         noteInfo = "%s,%.3f" % (elementType, nr.quarterLength) # back to diff
