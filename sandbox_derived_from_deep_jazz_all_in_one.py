@@ -818,7 +818,7 @@ if False:
         multi_parts[j].insert(offsets[i] + float(np.random.randint(0, 2)) * 0.5, n)
 
     run_score = stream.Score()
-    bpm = 250
+    bpm = 180
     run_score.insert(0.0, tempo.MetronomeMark(number=bpm))
     #http://web.mit.edu/music21/doc/moduleReference/moduleStream.html
     for i in range(len(multi_parts)):
