@@ -800,9 +800,10 @@ if False:
         j = np.random.randint(0 , N)
         multi_parts[j].insert(offsets[i], n)
 
+    run_score = stream.Score(multi_parts)
+    run_score.show()
+    run_score.show('midi')
 
-
-    np.random
     ###
 
     #abstract_grammars = __get_abstract_grammars(measures, chords)
