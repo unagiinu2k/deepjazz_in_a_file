@@ -795,12 +795,22 @@ if False:
 
     import numpy as np
     N = 3
-    multi_parts = [stream.Part()]  * N
+    multi_parts = [stream.Part() for  i in range(N)]
+    instruments = [instrument.ElectricGuitar() , instrument.Piano() , instrument.Cowbell()]
+    for i in range(len(multi_parts)):
+        multi_parts[i].append(instruments[i])
+
     for i, n in enumerate(notes):
         j = np.random.randint(0 , N)
         multi_parts[j].insert(offsets[i], n)
 
-    run_score = stream.Score(multi_parts)
+    run_score = stream.Score()
+    #http://web.mit.edu/music21/doc/moduleReference/moduleStream.html
+    for i in range(len(multi_parts)):
+        if False:
+            i = 0
+        run_score.insert(0 , multi_parts[i])
+
     run_score.show()
     run_score.show('midi')
 
