@@ -784,25 +784,15 @@ if False:
                 run_note = note.Note(p._getNameWithOctave())
                 offsets.append(c.offset)
                 notes.append(run_note)
+    run_sub = min(offsets)
+    offsets = [o - run_sub for o in offsets]
+    a_part = stream.Part()
+    for i , n  in enumerate(notes):
+        a_part.insert(offsets[i] , n)
+    a_part.show()
+    a_part.show('midi')
 
-
-
-    [n for n in chordStream]
-    run_element = chordStream[2]
-    type(run_element)
-    run_element.pitches
-    run_element
-
-    type(chords)
-    type(chords[1][0])
-    a_picth = chords[1][0].pitches[0]
-    run_note = note.Note(a_picth._getNameWithOctave())
-
-    .show('midi')
-    music21.
-        .show("midi")
-
-    [x for x in chords]
+    three_parts = [stream.Part()]  * 3
     ###
 
     #abstract_grammars = __get_abstract_grammars(measures, chords)
