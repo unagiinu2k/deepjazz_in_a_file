@@ -794,17 +794,32 @@ if False:
     a_part.show('midi')
 
     import numpy as np
-    N = 3
-    multi_parts = [stream.Part() for  i in range(N)]
-    instruments = [instrument.ElectricGuitar() , instrument.Piano() , instrument.Cowbell()]
+    N = 4
+
+    instruments = [instrument.ElectricGuitar() ,
+                   instrument.Piano() ,
+                   instrument.Cowbell() ,
+                   instrument.Flute()]
+    #instruments = [instrument.Flute() , instrument.Flute() , instrument.Flute() , instrument.Flute()]
+
+
+
+    multi_parts = [stream.Part() for i in range(N)]
     for i in range(len(multi_parts)):
-        multi_parts[i].append(instruments[i])
+        #multi_parts[i].append(instruments[i])
+        multi_parts[i].insert(instruments[i])
 
     for i, n in enumerate(notes):
         j = np.random.randint(0 , N)
-        multi_parts[j].insert(offsets[i], n)
+        #multi_parts[j].insert(offsets[i] + np.random.random() * 0.2 , n)
+        #multi_parts[j].insert(offsets[i], n)
+        if np.random.randint(0,2) == 1:
+            n = n.transpose('m3')
+        multi_parts[j].insert(offsets[i] + float(np.random.randint(0, 2)) * 0.5, n)
 
     run_score = stream.Score()
+    bpm = 250
+    run_score.insert(0.0, tempo.MetronomeMark(number=bpm))
     #http://web.mit.edu/music21/doc/moduleReference/moduleStream.html
     for i in range(len(multi_parts)):
         if False:
@@ -814,7 +829,8 @@ if False:
     run_score.show()
     run_score.show('midi')
 
-    ###
+    ########################################################################
+    ########################################################################
 
     #abstract_grammars = __get_abstract_grammars(measures, chords)
 
