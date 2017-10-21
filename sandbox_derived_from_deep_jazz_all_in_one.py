@@ -787,12 +787,22 @@ if False:
     run_sub = min(offsets)
     offsets = [o - run_sub for o in offsets]
     a_part = stream.Part()
-    for i , n  in enumerate(notes):
-        a_part.insert(offsets[i] , n)
+    for i, n in enumerate(notes):
+        a_part.insert(offsets[i], n)
+
     a_part.show()
     a_part.show('midi')
 
-    three_parts = [stream.Part()]  * 3
+    import numpy as np
+    N = 3
+    multi_parts = [stream.Part()]  * N
+    for i, n in enumerate(notes):
+        j = np.random.randint(0 , N)
+        multi_parts[j].insert(offsets[i], n)
+
+
+
+    np.random
     ###
 
     #abstract_grammars = __get_abstract_grammars(measures, chords)
