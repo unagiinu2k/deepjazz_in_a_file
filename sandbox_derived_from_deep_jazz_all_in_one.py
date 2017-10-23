@@ -782,6 +782,7 @@ if False:
                 if False:
                     p = c.pitches[0]
                 run_note = note.Note(p._getNameWithOctave())
+               # run_note.volume.velocity = 200
                 offsets.append(c.offset)
                 notes.append(run_note)
     run_sub = min(offsets)
@@ -790,8 +791,9 @@ if False:
     for i, n in enumerate(notes):
         a_part.insert(offsets[i], n)
 
-    a_part.show()
     a_part.show('midi')
+    a_part.show()
+
 
     import numpy as np
     N = 4
@@ -815,6 +817,7 @@ if False:
         #multi_parts[j].insert(offsets[i], n)
         if np.random.randint(0,2) == 1:
             n = n.transpose('m3')
+        n.volume.velocity = 200 * (1 + np.random.random())
         multi_parts[j].insert(offsets[i] + float(np.random.randint(0, 2)) * 0.5, n)
 
     run_score = stream.Score()
@@ -825,9 +828,9 @@ if False:
         if False:
             i = 0
         run_score.insert(0 , multi_parts[i])
-
-    run_score.show()
     run_score.show('midi')
+    run_score.show()
+
 
     ########################################################################
     ########################################################################
