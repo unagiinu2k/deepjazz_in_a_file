@@ -15,7 +15,6 @@ GPU run command:
 
     Note: running Keras/Theano on GPU is formally supported for only NVIDIA cards (CUDA backend).
 '''
-from __future__ import print_function
 import sys
 
 from music21 import *
