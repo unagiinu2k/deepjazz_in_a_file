@@ -61,3 +61,18 @@ def score2df(file):
 
     df_score = df_score.assign(dcent = df_score.groupby('n').cent.diff())
     return df_score
+
+def single_note_sequence_preprocess(df):
+    """[summary]
+    
+    Parameters
+    ----------
+    df : pandas.dataframe
+        
+    """
+    df = df.assign(dcent = df.cent.diff())
+    df = df.assign(dcent_lag1 = df.dcent.shift(1))
+    df = df.assign(dcent_lag2 = df.dcent.shift(2))
+    df = df.assign(dcent_lag3 = df.dcent.shift(3))
+    return df
+    
