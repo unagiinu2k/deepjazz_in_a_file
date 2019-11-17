@@ -4,7 +4,7 @@ import pandas as pd
 #file = "midi/sonate_31.mid"
 #file = 'chorales/midi/065900b_.mid'
 
-def score2df(file):
+def score2dataframe(file):
     """
     create data frame from midi file
     
