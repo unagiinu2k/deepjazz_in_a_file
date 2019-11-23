@@ -1,6 +1,9 @@
-from os import *
+#from os import *
 from score2df import *
-import numpy as np
+#import numpy as np
+
+#file = "midi/sonate_31.mid"
+#file = 'chorales/midi/065900b_.mid'
 
 def test_score2df():
     file = "midi/sonate_31.mid"
@@ -22,3 +25,8 @@ def test_sequencial_coding():
 
     df.head()
     assert df.shape[0] > 0
+
+def test_yx_encoder():
+    a_list = [['a','c','d'] , ['a' , 'd', 'e' , 'b']]
+
+    y,x = yx_encoder(a_list)

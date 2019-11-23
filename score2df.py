@@ -2,8 +2,10 @@ from music21 import converter, instrument, note, chord
 from music21 import interval
 import pandas as pd
 import numpy as np
-#file = "midi/sonate_31.mid"
-#file = 'chorales/midi/065900b_.mid'
+from itertools import chain
+from sklearn.preprocessing import LabelEncoder
+import torch.nn as nn
+import torch
 
 def score2dataframe(file):
     """
@@ -99,3 +101,37 @@ def add_lags(df):
     #df = df.assign(dcent_lag2 = df.dcent.shift(2))
     #df = df.assign(dcent_lag3 = df.dcent.shift(3))
     return df
+
+
+def yx_encoder(notes_list):
+    """ returns torch.tensor's y and x appropriate for constructing prediction model from list of list of characters 
+
+    
+    Parameters
+    ----------
+    notes_list : list
+        list of list which stores time series of characters
+    
+    Returns
+    -------
+    [type]
+        [description]
+    """
+    le = LabelEncoder()
+    note_set = set(chain.from_iterable(notes_list))
+
+    le.fit(list(note_set))
+
+    labeled_notes_list = [le.transform(np.array(x)) for x in notes_list]
+
+    label_set = set(le.transform(list(note_set)))
+
+    raw_X = [torch.zeros(labeled_notes_list[i].shape[0] - 1 , len(label_set)) for i in range(len(notes_list))]
+
+    for i in range(len(notes_list)):
+        for j in range(labeled_notes_list[i].shape[0]-1):
+            raw_X[i][j , labeled_notes_list[i][j]] = 1.
+
+    raw_y = [torch.tensor(np.array(x[1:])) for x in labeled_notes_list]
+
+    return raw_y , raw_X
