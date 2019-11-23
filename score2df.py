@@ -114,7 +114,11 @@ def yx_encoder(notes_list):
     
     Returns
     -------
-    [type]
+    y :  list of torch.tensor
+        not in one-hot expression
+    x : list of torch.tensor
+        in one-hot expression
+    
         [description]
     """
     le = LabelEncoder()
@@ -135,3 +139,51 @@ def yx_encoder(notes_list):
     raw_y = [torch.tensor(np.array(x[1:])) for x in labeled_notes_list]
 
     return raw_y , raw_X
+
+
+def get_batch_loss(ppd_y , ppd_X , mask , batch_samples , device , model , criterion):
+    """[summary]
+    
+    Parameters
+    ----------
+    ppd_y : [type]
+        [description]
+    ppd_X : [type]
+        [description]
+    mask : [type]
+        [description]
+    batch_samples : [type]
+        [description]
+    device : [type]
+        [description]
+    model : [type]
+        [description]
+    criteria : [type]
+        [description]
+    
+    Returns
+    -------
+    [type]
+        [description]
+    """
+    batch_X = ppd_X[0][: , batch_samples]
+    batch_y = ppd_y[0][:,  batch_samples]        
+    batch_mask = mask[batch_samples]
+    
+    #if is_use_gpu:
+    #    batch_X = try_gpu(batch_X)
+    #    batch_y = try_gpu(batch_y)
+    batch_X = batch_X.to(device)
+    batch_y = batch_y.to(device)
+
+    batch_mask = batch_mask.to(device)# = try_gpu(batch_mask)
+
+    model.zero_grad()
+
+    batch_y_model = model(batch_X)
+
+    loss = 0
+
+    for j in range(batch_y.shape[1]):
+        loss += criterion( batch_y_model[0:batch_mask[j] , j ] , batch_y[0:batch_mask[j] , j])
+    return loss
