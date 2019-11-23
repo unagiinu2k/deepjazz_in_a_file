@@ -1,6 +1,7 @@
 from music21 import converter, instrument, note, chord
 from music21 import interval
 import pandas as pd
+import numpy as np
 #file = "midi/sonate_31.mid"
 #file = 'chorales/midi/065900b_.mid'
 
@@ -45,13 +46,13 @@ def score2dataframe(file):
             #run_notes = [element]
             pitches.append(str(element.pitch))
             diffs.append(interval.notesToChromatic(note.Note("C4") , element).cents)
-            times.append(element.offset)
+            times.append(float(element.offset))
         elif isinstance(element, chord.Chord):           
             run_chord = element
             for i in range(min(len(element.normalOrder) , max_simultaneous)):
                 pitches.append(element.pitches[i])
                 diffs.append(interval.notesToChromatic(note.Note("C4") , run_chord.notes[i]).cents)
-                times.append(element.offset)
+                times.append(float(element.offset))
 
 
     df_score = pd.DataFrame({'pitch' : pitches , 'time' : times , 'cent' : diffs })
@@ -61,6 +62,23 @@ def score2dataframe(file):
 
     df_score = df_score.assign(dcent = df_score.groupby('n').cent.diff())
     return df_score
+
+
+def add_sequential_diffs(df):
+    """
+    add Columns dcent and dt consistent with the 
+    sequential chords-notes coding idea
+    Parameters
+    ----------
+    df : data frame
+        
+    """
+    df.sort_values(['time' , 'n'] , inplace = True)
+    df = df.assign(dt = df.time.diff())
+    df = df.assign(dcent = np.where(df.n == 0 , df.groupby('n').cent.diff(), df.groupby('time').cent.diff()))
+    return df
+
+
 
 def add_lags(df):
     """[summary]
