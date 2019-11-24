@@ -141,7 +141,7 @@ def yx_encoder(notes_list):
     return raw_y , raw_X
 
 
-def get_batch_loss(ppd_y , ppd_X , mask , batch_samples , device , model , criterion):
+def batch_loss_1var(ppd_y , ppd_X , mask , batch_samples , device , model , criterion):
     """[summary]
     
     Parameters
@@ -168,15 +168,12 @@ def get_batch_loss(ppd_y , ppd_X , mask , batch_samples , device , model , crite
     """
     batch_X = ppd_X[0][: , batch_samples]
     batch_y = ppd_y[0][:,  batch_samples]        
-    batch_mask = mask[batch_samples]
+    batch_mask = mask[batch_samples]    
     
-    #if is_use_gpu:
-    #    batch_X = try_gpu(batch_X)
-    #    batch_y = try_gpu(batch_y)
     batch_X = batch_X.to(device)
     batch_y = batch_y.to(device)
 
-    batch_mask = batch_mask.to(device)# = try_gpu(batch_mask)
+    batch_mask = batch_mask.to(device)
 
     model.zero_grad()
 
@@ -187,3 +184,55 @@ def get_batch_loss(ppd_y , ppd_X , mask , batch_samples , device , model , crite
     for j in range(batch_y.shape[1]):
         loss += criterion( batch_y_model[0:batch_mask[j] , j ] , batch_y[0:batch_mask[j] , j])
     return loss
+
+def batch_loss_2vars(ppd_y1 , ppd_y2 , ppd_X , mask , batch_samples , device , model , criterion):
+    """[summary]
+    
+    Parameters
+    ----------
+    ppd_y1 : [type]
+        [description]
+    ppd_y2 : [type]
+        [description]
+    ppd_X : [type]
+        [description]
+    mask : [type]
+        [description]
+    batch_samples : [type]
+        [description]
+    device : [type]
+        [description]
+    model : [type]
+        [description]
+    criterion : [type]
+        [description]
+    
+    Returns
+    -------
+    [type]
+        [description]
+    """
+
+    batch_X = ppd_X[0][: , batch_samples]
+    batch_y1 = ppd_y1[0][:,  batch_samples]        
+    batch_y2 = ppd_y2[0][:,  batch_samples]        
+    batch_mask = mask[batch_samples]    
+    
+    batch_X = batch_X.to(device)
+    batch_y1 = batch_y1.to(device)
+    batch_y2 = batch_y2.to(device)
+
+    batch_mask = batch_mask.to(device)
+
+    model.zero_grad()
+
+    batch_y1_model , batch_y2_model = model(batch_X)
+
+    loss1 = 0
+    loss2 = 0
+
+
+    for j in range(batch_y1.shape[1]):
+        loss1 += criterion( batch_y1_model[0:batch_mask[j] , j ] , batch_y1[0:batch_mask[j] , j])
+        loss2 += criterion( batch_y2_model[0:batch_mask[j] , j ] , batch_y2[0:batch_mask[j] , j])
+    return loss1 , loss2
