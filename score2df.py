@@ -138,7 +138,7 @@ def yx_encoder(notes_list):
 
     raw_y = [torch.tensor(np.array(x[1:])) for x in labeled_notes_list]
 
-    return raw_y , raw_X
+    return raw_y , raw_X , le
 
 
 def batch_loss_1var(ppd_y , ppd_X , mask , batch_samples , device , model , criterion):
@@ -236,3 +236,31 @@ def batch_loss_2vars(ppd_y1 , ppd_y2 , ppd_X , mask , batch_samples , device , m
         loss1 += criterion( batch_y1_model[0:batch_mask[j] , j ] , batch_y1[0:batch_mask[j] , j])
         loss2 += criterion( batch_y2_model[0:batch_mask[j] , j ] , batch_y2[0:batch_mask[j] , j])
     return loss1 , loss2
+
+def predicted_vs_realized(y_pred ,ppd_y , le):
+    """[summary]
+    
+    Parameters
+    ----------
+    y_pred : torch tensor [sequence number x sample number x feature number]
+        [description]
+    ppd_y : tuple of padded and packed torch tensor [sequence number x sample number]  and mask 
+        [description]
+    mask : torch tensor [sample number]
+        [description]
+    le : label encoder for y
+        [description]
+    
+    Returns
+    -------
+    pandas DataFrame
+        [description]
+    """
+
+
+    mask = ppd_y[1]
+    y_pred_idx = y_pred.detach().cpu().numpy().argmax(axis = 2)
+    y_pred = [[float(le.classes_[x]) for x in y_pred_idx[0:mask.numpy()[i] , i]] for i in range(y_pred_idx.shape[1])]
+    y_realized = [[float(le.classes_[x]) for x in ppd_y[0].cpu().numpy()[0:mask.numpy()[i] , i]] for i in range(y_pred_idx.shape[1])]
+    df_scatter = pd.DataFrame({'pred':chain.from_iterable(y_pred) , 'realized':chain.from_iterable(y_realized)})
+    return df_scatter
