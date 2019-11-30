@@ -27,7 +27,7 @@ def score2dataframe(file):
 
     """
     
-    midi = converter.parse(file)
+    run_midi = converter.parse(file)
     notes_to_parse = None
     max_simultaneous = 4
     #pitches = [[] for i in range(max_simultaneous)]
@@ -37,11 +37,11 @@ def score2dataframe(file):
     times = []
     diffs = []
 
-    parts = instrument.partitionByInstrument(midi)
+    parts = instrument.partitionByInstrument(run_midi)
     if parts: # file has instrument parts
         notes_to_parse = parts.parts[0].recurse()
     else: # file has notes in a flat structure
-        notes_to_parse = midi.flat.notes
+        notes_to_parse = run_midi.flat.notes
     for element in notes_to_parse:
         
         if isinstance(element, note.Note):        
