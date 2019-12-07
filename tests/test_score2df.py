@@ -10,8 +10,13 @@ def test_score2df():
     df = score2df.score2dataframe(file)
     assert df.shape[0] > 0
 
-def test_flat_structured_midi():
+def test_midi_file_without_instruments():
     file = 'chorales/midi/028100b_.mid'
+    df = score2df.score2dataframe(file)
+    assert df.shape[0] > 0
+
+def test_midi_file_with_instruments():
+    file = 'chorales/midi/066300b_.mid'
     df = score2df.score2dataframe(file)
     assert df.shape[0] > 0
 

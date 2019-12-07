@@ -37,9 +37,9 @@ def score2dataframe(file):
     times = []
     diffs = []
 
-    parts = instrument.partitionByInstrument(run_midi)
-    if parts: # file has instrument parts
-        notes_to_parse = parts.parts[0].recurse()
+    repartitioned = instrument.partitionByInstrument(run_midi)
+    if repartitioned: # file has instrument parts
+        notes_to_parse = repartitioned.parts[0].recurse()
     else: # file has notes in a flat structure
         notes_to_parse = run_midi.flat.notes
     for element in notes_to_parse:
