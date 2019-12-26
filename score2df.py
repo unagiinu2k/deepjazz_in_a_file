@@ -51,9 +51,12 @@ def score2dataframe(file):
             times.append(float(element.offset))
         elif isinstance(element, chord.Chord):           
             run_chord = element
-            for i in range(min(len(element.normalOrder) , max_simultaneous)):
-                pitches.append(element.pitches[i])
-                diffs.append(interval.notesToChromatic(note.Note("C4") , run_chord.notes[i]).cents)
+            run_notes = sorted(run_chord.notes)
+            for i in range(min(len(run_notes), max_simultaneous)):
+                #pitches.append(element.pitches[i])
+                pitches.append(run_notes[i].pitch)
+                #diffs.append(interval.notesToChromatic(note.Note("C4") , run_chord.notes[i]).cents)
+                diffs.append(interval.notesToChromatic(note.Note("C4") , run_notes[i]).cents)
                 times.append(float(element.offset))
 
 
