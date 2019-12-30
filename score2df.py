@@ -66,6 +66,9 @@ def score2dataframe(file):
     df_score = df_score.assign(n = df_score.groupby('time').cumcount())
 
     df_score = df_score.assign(dcent = df_score.groupby('n').cent.diff())
+
+    key = run_midi.analyze('key')
+    df_score = df_score.assign(tonic_name = key.tonic.name , mode = key.mode)
     return df_score
 
 
